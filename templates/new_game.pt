@@ -1,0 +1,44 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        input[type="text"]
+        {
+            width: 100%;
+            font-size: 24px;
+            height:40px !important;
+            text-align:center;
+        }
+    </style>
+    
+    <div metal:fill-slot="content">
+        <script type="text/javascript" charset="utf-8">
+            $(function() {
+                $('#opponent_name').focus();
+            });
+        </script>
+        
+        <div tal:condition="message != ''" id="flash_update" style="border: 1px solid #AAA; margin:10px; padding:10px; text-align:center;">
+            ${message}
+            
+            <script type="text/javascript" charset="utf-8">
+                $(document).ready(function() {
+                    $('#flash_update').show();
+                    $('#flash_update').animate({backgroundColor: "#${flash_colour}"}, 500);
+                    $('#flash_update').animate({backgroundColor: "#FFF"}, 1500);
+                });
+            </script>
+        </div>
+        
+        <form action="${request.route_url('connect_four.new_game')}" method="post" accept-charset="utf-8" style="width:600px; margin: 0 auto;">      
+            Opponents are selected by their usernames (e.g. jordant) and can be upper or lower case.
+            <br /><br />
+            
+            <input type="text" name="opponent_name" value="${request.params.get('opponent_name', '')}" id="opponent_name"/><br />
+            
+            <input type="submit" id="main_submit" name="form.submitted" class="button" value="Start game" />
+        </form>
+    </div>
+    
+    <div metal:fill-slot="footer">
+        Open source - <a href="http://github.com/teifion/connect_four">http://github.com/teifion/connect_four</a>
+    </div>
+</div>

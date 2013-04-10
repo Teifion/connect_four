@@ -1,0 +1,20 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        
+    </style>
+    
+    <div metal:fill-slot="content">
+        <div tal:condition="len(game_list) == 0">
+            You have no active games, why not challenge someone?<br />
+            <a href="${request.route_url('connect_four.new_game')}" class="inbutton">Find an opponent</a>
+        </div>
+        
+        <div tal:condition="len(game_list) > 0">
+            Not implemented
+        </div>
+    </div>
+    
+    <div metal:fill-slot="footer">
+        Open source - <a href="http://github.com/teifion/connect_four">http://github.com/teifion/connect_four</a>
+    </div>
+</div>
