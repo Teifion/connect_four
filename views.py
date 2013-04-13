@@ -46,8 +46,8 @@ def new_game(request):
             message = """I'm sorry, we cannot find any opponent by the name of '{}'""".format(opponent_name)
             
         else:
-            game = db_funcs.new_game(the_user, opponent)
-            raise HTTPFound(location=request.route_url("connect_four.game", game_id=game.id))
+            game_id = db_funcs.new_game(the_user, opponent)
+            return HTTPFound(location=request.route_url("connect_four.game", game_id=game_id))
     
     return dict(
         title        = "Connect Four",
@@ -55,4 +55,21 @@ def new_game(request):
         the_user     = the_user,
         message      = message,
         flash_colour = flash_colour,
+    )
+
+@view_config(route_name='connect_four.game', renderer='templates/view_game.pt', permission='loggedin')
+def view_game(request):
+    the_user = config['get_user_func'](request)
+    layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
+    
+    game_id  = int(request.matchdict['game_id'])
+    the_game = db_funcs.get_game(game_id)
+    message  = ""
+    
+    return dict(
+        title    = "Connect Four",
+        layout   = layout,
+        the_user = the_user,
+        the_game = the_game,
+        message  = message,
     )

@@ -41,7 +41,22 @@ def new_game(p1, p2):
     game.current_state = str(logic_funcs.empty_board)
     
     config['DBSession'].add(game)
-    config['DBSession'].flush()
     
-    # Return the game
-    return game
+    # Get game ID
+    game_id = config['DBSession'].query(ConnectFourGame.id).filter(
+        ConnectFourGame.player1 == p1.id,
+        ConnectFourGame.player2 == p2.id,
+    ).order_by(ConnectFourGame.id.desc()).first()[0]
+    
+    return game_id
+
+def get_game(game_id):
+    the_game = config['DBSession'].query(ConnectFourGame).filter(ConnectFourGame.id == game_id).first()
+    
+    if the_game == None:
+        raise ValueError("We were unable to find the game")
+    
+    return the_game
+
+def perform_move():
+    pass
