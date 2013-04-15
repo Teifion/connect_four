@@ -6,7 +6,12 @@ from pyramid.httpexceptions import HTTPFound
 
 from pyramid.renderers import get_renderer
 
-from .lib import db_funcs
+from .lib import (
+    db_funcs,
+    actions,
+    rules,
+)
+
 from .models import (
     ConnectFourGame,
     ConnectFourMove,
@@ -72,4 +77,36 @@ def view_game(request):
         the_user = the_user,
         the_game = the_game,
         message  = message,
+    )
+
+@view_config(route_name='connect_four.make_move', renderer='templates/make_move.pt', permission='loggedin')
+def make_move(request):
+    the_user = config['get_user_func'](request)
+    layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
+    
+    message = ""
+    flash_colour = "A00"
+    
+    game_id  = int(request.params['game_id'])
+    column   = int(request.params['column'])
+    
+    the_game = db_funcs.get_game(game_id)
+    current_player = rules.current_player(the_game)
+    
+    if current_player == the_user.id:
+        try:
+            actions.perform_move(the_game, column)
+            return HTTPFound(location=request.route_url("connect_four.game", game_id=game_id))
+        except Exception as e:
+            message = e.args[0]
+    else:
+        message = "It is not your turn"
+    
+    return dict(
+        title        = "Connect Four",
+        layout       = layout,
+        the_user     = the_user,
+        the_game     = the_game,
+        message      = message,
+        flash_colour = flash_colour,
     )

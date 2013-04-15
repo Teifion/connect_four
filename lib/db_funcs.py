@@ -10,7 +10,7 @@ from ..models import (
 )
 
 import datetime
-from . import logic_funcs
+from . import rules
 
 def find_user(identifier):
     User = config['User']
@@ -38,7 +38,7 @@ def new_game(p1, p2):
     game.started       = datetime.datetime.now()
     game.turn          = 0
     game.complete      = False
-    game.current_state = str(logic_funcs.empty_board)
+    game.current_state = str(rules.empty_board)
     
     config['DBSession'].add(game)
     

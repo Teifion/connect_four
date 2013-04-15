@@ -1,0 +1,31 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        
+    </style>
+    
+    <div metal:fill-slot="content">
+        <script type="text/javascript" charset="utf-8">
+            $(function() {
+                $('#opponent_name').focus();
+            });
+        </script>
+        
+        <div tal:condition="message != ''" id="flash_update" style="border: 1px solid #AAA; margin:10px; padding:10px; text-align:center;">
+            ${message}
+            
+            <script type="text/javascript" charset="utf-8">
+                $(document).ready(function() {
+                    $('#flash_update').show();
+                    $('#flash_update').animate({backgroundColor: "#${flash_colour}"}, 500);
+                    $('#flash_update').animate({backgroundColor: "#FFF"}, 1500);
+                });
+            </script>
+        </div>
+        <a href="${request.route_url('connect_four.game', game_id=the_game.id)}" class="inbutton">Return to game</a>
+        <a href="${request.route_url('connect_four.menu')}" class="inbutton">Connect 4 menu</a>
+    </div>
+    
+    <div metal:fill-slot="footer">
+        Open source - <a href="http://github.com/teifion/connect_four">http://github.com/teifion/connect_four</a>
+    </div>
+</div>

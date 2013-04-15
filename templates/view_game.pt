@@ -78,8 +78,9 @@
                 });
             </script>
         </div>
-        
-        <form class="dropper" tal:repeat="col range(7)" action="${request.route_url('connect_four.make_move')}">
+        <form class="dropper" tal:repeat="col range(7)" action="${request.route_url('connect_four.make_move')}" method="post">
+            <input type="hidden" name="game_id" value="${the_game.id}" />
+            <input type="hidden" name="column" value="${col}" />
             <input type="submit" value="X" class="inbutton" />
         </form>
         <div id="the_game">
