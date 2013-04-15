@@ -10,14 +10,27 @@ from ..models import (
     ConnectFourMove,
 )
 
+from sqlalchemy import or_, and_
 import datetime
 from . import rules
 from . import actions
 
+def get_game_list(user_id):
+    User = config['User']
+    
+    filters = (
+        or_(
+            and_(ConnectFourGame.player1 == user_id, "mod(connect_four_games.turn, 2) = 0", User.id == ConnectFourGame.player2),
+            and_(ConnectFourGame.player2 == user_id, "mod(connect_four_games.turn, 2) = 1", User.id == ConnectFourGame.player1),
+        ),
+        ConnectFourGame.winner == None,
+    )
+    
+    return list(config['DBSession'].query(ConnectFourGame.id, User.name, ConnectFourGame.turn).filter(*filters))
+
 def find_user(identifier):
     User = config['User']
     
-    print(config)
     if type(identifier) == str:
         found = config['DBSession'].query(User.id).filter(User.name == identifier).first()
         if found == None:
@@ -39,7 +52,6 @@ def new_game(p1, p2):
     game.player2       = p2.id
     game.started       = datetime.datetime.now()
     game.turn          = 0
-    game.complete      = False
     game.current_state = str(rules.empty_board)
     
     config['DBSession'].add(game)

@@ -24,7 +24,7 @@ def menu(request):
     the_user = config['get_user_func'](request)
     layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
     
-    game_list = []
+    game_list = db_funcs.get_game_list(the_user.id)
     
     return dict(
         title      = "Connect Four",

@@ -10,7 +10,10 @@
         </div>
         
         <div tal:condition="len(game_list) > 0">
-            Not implemented
+            <a href="${request.route_url('connect_four.new_game')}" class="inbutton" style="float:right;">New game</a>
+            
+            <strong>Current games in progress:</strong><br />
+            <a href="${request.route_url('connect_four.game', game_id=g[0])}" tal:repeat="g game_list" class="inbutton">${g[1]} (Turn ${g[2]})</a>
         </div>
     </div>
     
