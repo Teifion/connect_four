@@ -21,4 +21,7 @@ def add_views(config):
     config.add_route('connect_four.make_move', '/games/connect4/make_move')
     config.add_route('connect_four.forfeit', '/games/connect4/forfeit')
     
+    # Ajax views
+    config.add_route('connect_four.check_turn', '/games/connect4/check_turn/{game_id}')
+    
     return config

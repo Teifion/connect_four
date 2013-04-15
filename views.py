@@ -72,11 +72,13 @@ def view_game(request):
     message  = ""
     
     return dict(
-        title    = "Connect Four",
-        layout   = layout,
-        the_user = the_user,
-        the_game = the_game,
-        message  = message,
+        title     = "Connect Four",
+        layout    = layout,
+        the_user  = the_user,
+        the_game  = the_game,
+        your_turn = rules.current_player(the_game) == the_user.id,
+        message   = message,
+        positions = rules.visual_positions(),
     )
 
 @view_config(route_name='connect_four.make_move', renderer='templates/make_move.pt', permission='loggedin')
@@ -95,9 +97,13 @@ def make_move(request):
     
     if current_player == the_user.id:
         try:
-            actions.perform_move(the_game, column)
+            if not rules.is_move_valid(the_game.current_state, column):
+                raise Exception("Invalid move")
+            
+            db_funcs.perform_move(the_game, column)
             return HTTPFound(location=request.route_url("connect_four.game", game_id=game_id))
         except Exception as e:
+            raise
             message = e.args[0]
     else:
         message = "It is not your turn"
@@ -110,3 +116,20 @@ def make_move(request):
         message      = message,
         flash_colour = flash_colour,
     )
+
+@view_config(route_name='connect_four.check_turn', renderer='string', permission='loggedin')
+def check_turn(request):
+    # game_id = int(request.matchdict['game_id'])
+    # the_game = DBSession.query(WordyGame).filter(WordyGame.id == game_id).one()
+    # pturn = wordy_functions.player_turn(the_game)
+    
+    # request.do_not_log = True
+    # return str((the_game.players[pturn] == request.user.id))
+    
+    the_user = config['get_user_func'](request)
+    game_id  = int(request.matchdict['game_id'])
+    
+    the_game = db_funcs.get_game(game_id)
+    if rules.current_player(the_game) == the_user.id:
+        return "True"
+    return "False"

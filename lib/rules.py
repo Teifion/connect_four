@@ -18,9 +18,23 @@ def current_player_number(game_turn):
     else: return 2
 
 def is_move_valid(current_state, col):
-    for i, v in enumerate(column(current_state, col)):
-        if v == " ": return True
-    return False
+    return first_empty(column(current_state, col)) is not None
 
 def column(current_state, col):
-    return (current_state[col + row*7] for row in range(5,-1,-1))
+    return (current_state[col + row*7] for row in range(6))
+
+def first_empty(column_sequence):
+    for i, v in enumerate(column_sequence):
+        if v == " ": return i
+    return None
+
+def get_place_position(row, col):
+    return (row * 7) + col
+
+def visual_positions():
+    for row in range(6):
+        for col in range(7):
+            yield get_place_position(5-row, col)
+
+def check_for_game_end(current_state):
+    return False

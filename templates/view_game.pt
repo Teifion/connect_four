@@ -10,7 +10,7 @@
         {
             border: 0px solid #000;
             width: 700px;
-            height: 650px;
+            height: 600px;
             clear: both;
             
             background-image: url('${request.static_url('dashboard:static/games/connect_four/board.png')}');
@@ -20,7 +20,7 @@
         .dropper
         {
             width: 100px;
-            height: 50px;
+            height: 30px;
             float: left;
             
             text-align: center;
@@ -65,6 +65,27 @@
             $(function() {
                 $('#opponent_name').focus();
             });
+            
+            function setIntervalX(callback, delay, repetitions, slow_delay) {
+                var x = 0;
+                var intervalID = window.setInterval(function () {
+                   callback();
+                   if (++x === repetitions) {
+                       window.clearInterval(intervalID);
+                       window.setInterval(check_turn(), slow_delay);
+                   }
+                }, delay);
+            }
+            
+            function check_turn()
+            {
+                var my_turn = $('#my_turn').html();
+                
+                if (my_turn == "True")
+                {
+                    location.reload();
+                }
+            }
         </script>
         
         <div tal:condition="message != ''" id="flash_update" style="border: 1px solid #AAA; margin:10px; padding:10px; text-align:center;">
@@ -78,13 +99,11 @@
                 });
             </script>
         </div>
-        <form class="dropper" tal:repeat="col range(7)" action="${request.route_url('connect_four.make_move')}" method="post">
-            <input type="hidden" name="game_id" value="${the_game.id}" />
-            <input type="hidden" name="column" value="${col}" />
-            <input type="submit" value="X" class="inbutton" />
-        </form>
+        <div id="my_turn" style="display:none;">
+            &nbsp;
+        </div>
         <div id="the_game">
-            <div class="square" tal:repeat="circle range(6*7)">
+            <div class="square" tal:repeat="circle positions">
                 <div class="empty" tal:condition="the_game.current_state[circle] == ' '">
                     &nbsp;
                 </div>
@@ -95,6 +114,22 @@
                     &nbsp;
                 </div>
             </div>
+        </div>
+        <form class="dropper" tal:repeat="col range(7)" action="${request.route_url('connect_four.make_move')}" method="post" tal:condition="your_turn">
+            <input type="hidden" name="game_id" value="${the_game.id}" />
+            <input type="hidden" name="column" value="${col}" />
+            <input type="submit" value="X" class="inbutton" />
+        </form>
+        
+        <div tal:condition="not your_turn" style="text-align:center;padding:10px;width:680px;">
+            It is not currently your turn. The page will automatically refresh when it is.
+            
+            <script type="text/javascript">
+                // Check every 30 seconds
+                setIntervalX(function () {
+                    $('#my_turn').load('${request.route_url('connect_four.check_turn', game_id=the_game.id)}', {}, check_turn);
+                }, 1000*5, 6, 1000*30);
+            </script>
         </div>
     </div>
     

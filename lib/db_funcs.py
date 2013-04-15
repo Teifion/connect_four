@@ -6,11 +6,13 @@ impure.
 from ..config import config
 
 from ..models import (
-    ConnectFourGame
+    ConnectFourGame,
+    ConnectFourMove,
 )
 
 import datetime
 from . import rules
+from . import actions
 
 def find_user(identifier):
     User = config['User']
@@ -58,5 +60,25 @@ def get_game(game_id):
     
     return the_game
 
-def perform_move():
-    pass
+def add_turn(the_game, column):
+    new_turn           = ConnectFourMove()
+    new_turn.game      = the_game.id
+    new_turn.player    = rules.current_player(the_game)
+    
+    new_turn.move      = column
+    new_turn.timestamp = datetime.datetime.now()
+    
+    config['DBSession'].add(new_turn)
+
+def end_game(the_game):
+    the_game.complete = True
+
+def perform_move(the_game, column):
+    add_turn(the_game, column)
+    actions.perform_move(the_game, column)
+    actions.increment_turn(the_game)
+    
+    if rules.check_for_game_end(the_game.current_state):
+        end_game(the_game)
+    
+    config['DBSession'].add(the_game)

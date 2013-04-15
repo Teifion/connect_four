@@ -31,7 +31,7 @@ class ConnectFourGame(Base):
     player1       = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     player2       = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     
-    complete      = Column(Boolean, nullable=False, default=False)
+    winner        = Column(Integer, ForeignKey("users.id"), nullable=True)
     current_state = Column(String, nullable=False)
 
 class ConnectFourMove(Base):
