@@ -84,6 +84,9 @@ def add_turn(the_game, column):
 
 def end_game(the_game):
     the_game.complete = True
+    
+    current_player = rules.current_player_number(the_game.turn)
+    the_game.winner = rules.get_player_user_id(the_game, 3-current_player)
 
 def perform_move(the_game, column):
     add_turn(the_game, column)

@@ -77,6 +77,7 @@ def view_game(request):
         the_user  = the_user,
         the_game  = the_game,
         your_turn = rules.current_player(the_game) == the_user.id,
+        rules     = rules,
         message   = message,
         positions = rules.visual_positions(),
     )
@@ -119,12 +120,7 @@ def make_move(request):
 
 @view_config(route_name='connect_four.check_turn', renderer='string', permission='loggedin')
 def check_turn(request):
-    # game_id = int(request.matchdict['game_id'])
-    # the_game = DBSession.query(WordyGame).filter(WordyGame.id == game_id).one()
-    # pturn = wordy_functions.player_turn(the_game)
-    
-    # request.do_not_log = True
-    # return str((the_game.players[pturn] == request.user.id))
+    request.do_not_log = True
     
     the_user = config['get_user_func'](request)
     game_id  = int(request.matchdict['game_id'])

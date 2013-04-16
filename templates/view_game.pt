@@ -45,7 +45,7 @@
         
         .square .player1
         {
-            background-position: 0px 0px;
+            background-position: 1px 1px;
         }
         
         .square .player2
@@ -58,6 +58,25 @@
             min-width: 80px;
             width: 80px;
         }
+        
+        .player1_block, .player2_block
+        {
+            width: 700px;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 1.3em;
+        }
+        
+        .player1_block
+        {
+            background-color: #06A;
+            color: #FFF;
+        }
+        
+        .player2_block
+        {
+            background-color: #CC2;
+        }
     </style>
     
     <div metal:fill-slot="content">
@@ -66,15 +85,9 @@
                 $('#opponent_name').focus();
             });
             
-            function setIntervalX(callback, delay, repetitions, slow_delay) {
-                var x = 0;
-                var intervalID = window.setInterval(function () {
-                   callback();
-                   if (++x === repetitions) {
-                       window.clearInterval(intervalID);
-                       window.setInterval(check_turn(), slow_delay);
-                   }
-                }, delay);
+            function load_check_turn_html()
+            {
+                $('#my_turn').load('${request.route_url('connect_four.check_turn', game_id=the_game.id)}', {}, check_turn);
             }
             
             function check_turn()
@@ -85,6 +98,17 @@
                 {
                     location.reload();
                 }
+            }
+            
+            function setIntervalX(callback, delay, repetitions, slow_delay) {
+                var x = 0;
+                var intervalID = window.setInterval(function () {
+                   callback();
+                   if (++x === repetitions) {
+                       window.clearInterval(intervalID);
+                       var newInterval = window.setInterval("load_check_turn_html();", slow_delay);
+                   }
+                }, delay);
             }
         </script>
         
@@ -99,8 +123,15 @@
                 });
             </script>
         </div>
+        ${the_game.winner}
         <div id="my_turn" style="display:none;">
             &nbsp;
+        </div>
+        <div class="player1_block" tal:condition="rules.get_player_game_number(the_game, the_user.id) == 1">
+            You are the blue player
+        </div>
+        <div class="player2_block" tal:condition="rules.get_player_game_number(the_game, the_user.id) == 2">
+            You are the yellow player
         </div>
         <div id="the_game">
             <div class="square" tal:repeat="circle positions">
@@ -127,8 +158,8 @@
             <script type="text/javascript">
                 // Check every 30 seconds
                 setIntervalX(function () {
-                    $('#my_turn').load('${request.route_url('connect_four.check_turn', game_id=the_game.id)}', {}, check_turn);
-                }, 1000*5, 6, 1000*30);
+                    load_check_turn_html()
+                }, 1000*5, 12, 1000*30);
             </script>
         </div>
     </div>
