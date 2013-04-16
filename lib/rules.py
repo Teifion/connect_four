@@ -38,8 +38,12 @@ def visual_positions():
         for col in range(width):
             yield get_place_position(5-row, col)
 
+def valid_moves(current_state):
+    f = lambda c: is_move_valid(current_state, c)
+    return filter(f, range(7))
+
 def _update_reader(reader, new_square):
-    if reader == [] or new_square == " ":
+    if reader == [] or new_square not in "12":
         return [new_square]
     
     if new_square == reader[0]:
@@ -67,6 +71,9 @@ def _check_vertical_end(current_state):
             if reader is True:
                 return True
 
+def _check_draw(current_state):
+    return " " not in current_state
+
 def check_for_game_end(current_state):
     # First we want to check to see horrizontals
     function_list = (
@@ -77,5 +84,9 @@ def check_for_game_end(current_state):
     for f in function_list:
         if f(current_state) is True:
             return True
+    
+    # Maybe it's a draw?
+    if _check_draw(current_state):
+        return None
     
     return False

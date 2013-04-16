@@ -57,7 +57,7 @@ def get_recent_game_list(user_id, limit=5):
     
     return list(config['DBSession'].query(
         ConnectFourGame.id, User.name, ConnectFourGame.turn, ConnectFourGame.winner
-    ).filter(*filters).limit(limit))
+    ).filter(*filters).order_by(ConnectFourGame.id.desc()).limit(limit))
 
 def find_user(identifier):
     User = config['User']
@@ -118,13 +118,20 @@ def end_game(the_game):
     
     current_player = rules.current_player_number(the_game.turn)
     the_game.winner = rules.get_player_user_id(the_game, 3-current_player)
+    
+def draw_game(the_game):
+    the_game.complete = True
+    the_game.winner = -1
 
 def perform_move(the_game, column):
     add_turn(the_game, column)
     actions.perform_move(the_game, column)
     actions.increment_turn(the_game)
     
-    if rules.check_for_game_end(the_game.current_state):
+    end_result = rules.check_for_game_end(the_game.current_state)
+    if end_result == True:
         end_game(the_game)
+    elif end_result == None:
+        draw_game(the_game)
     
     config['DBSession'].add(the_game)

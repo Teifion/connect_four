@@ -7,32 +7,33 @@
         <div style="width: 350px; float:right;" id="waiting_games">
             <div tal:condition="len(waiting_list) != 0">
                 <strong>Games awaiting your opponent's move:</strong><br />
-                <a href="${request.route_url('connect_four.game', game_id=g[0])}" tal:repeat="g waiting_list" class="inbutton">${g[1]} (Turn ${g[2]})</a>
+                <a href="${request.route_url('connect_four.game', game_id=g[0])}" tal:repeat="g waiting_list" class="button">${g[1]} (Turn ${g[2]})</a>
             </div>
         </div>
             
         <div style="width: 350px;" id="active_games">
             <div tal:condition="len(game_list) == 0">
                 You have no active games, why not challenge someone?<br />
-                <a href="${request.route_url('connect_four.new_game')}" class="inbutton">Find an opponent</a>
+                <a href="${request.route_url('connect_four.new_game')}" class="button">Find an opponent</a>
             </div>
             
             <div tal:condition="len(game_list) > 0">
                 <strong>Current games in progress:</strong><br />
-                <a href="${request.route_url('connect_four.game', game_id=g[0])}" tal:repeat="g game_list" class="inbutton">${g[1]} (Turn ${g[2]})</a>
+                <a href="${request.route_url('connect_four.game', game_id=g[0])}" tal:repeat="g game_list" class="button">${g[1]} (Turn ${g[2]})</a>
                 
                 <br /><br />
-                <a href="${request.route_url('connect_four.new_game')}" class="inbutton">New game</a>
+                <a href="${request.route_url('connect_four.new_game')}" class="button">New game</a>
             </div>
         </div>
         
         <div style="width: 350px; margin-top: 100px; clear:both;" id="recent_list">
             <div tal:condition="len(recent_list) != 0">
                 <strong>Recently completed games:</strong><br />
-                <a href="${request.route_url('connect_four.game', game_id=g[0])}" tal:repeat="g recent_list" class="inbutton">
+                <a href="${request.route_url('connect_four.game', game_id=g[0])}" tal:repeat="g recent_list" class="button">
                     ${g[1]}
                     <span tal:condition="g[3] == the_user.id">Victory!</span>
-                    <span tal:condition="g[3] != the_user.id">Defeat</span>
+                    <span tal:condition="g[3] != the_user.id and g[3] != -1">Defeat</span>
+                    <span tal:condition="g[3] == -1">Draw</span>
                     (Turn ${g[2]})
                 </a>
             </div>

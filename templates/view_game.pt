@@ -129,7 +129,13 @@
             &nbsp;
         </div>
         <div tal:condition="the_game.winner != None" style="margin-bottom:10px;">
-            The game is over, ${winner.name} won the game on turn ${the_game.turn-1}
+            <span tal:condition="winner.id != -1">
+                The game is over, ${winner.name} won the game on turn ${the_game.turn-1}
+            </span>
+            
+            <span tal:condition="winner.id == -1">
+                The game is drawn on turn ${the_game.turn-1}
+            </span>
         </div>
         
         <div class="player1_block" tal:condition="rules.get_player_game_number(the_game, the_user.id) == 1">
@@ -155,7 +161,7 @@
         <form class="dropper" tal:repeat="col range(7)" action="${request.route_url('connect_four.make_move')}" method="post" tal:condition="your_turn and the_game.winner is None">
             <input type="hidden" name="game_id" value="${the_game.id}" />
             <input type="hidden" name="column" value="${col}" />
-            <input type="submit" value="X" class="inbutton" />
+            <input type="submit" value="X" class="inbutton" tal:condition="col in valid_moves"/>
         </form>
         
         <div tal:condition="not your_turn and the_game.winner is None" style="text-align:center;padding:10px;width:680px;">

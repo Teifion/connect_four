@@ -79,6 +79,10 @@ def view_game(request):
     if the_game.winner != None:
         winner = db_funcs.find_user(the_game.winner)
     
+    print("\n\n")
+    print(the_game.winner)
+    print("\n\n")
+    
     return dict(
         title     = "Connect Four",
         layout    = layout,
@@ -89,6 +93,7 @@ def view_game(request):
         winner    = winner,
         message   = message,
         positions = rules.visual_positions(),
+        valid_moves = list(rules.valid_moves(the_game.current_state)),
     )
 
 @view_config(route_name='connect_four.make_move', renderer='templates/make_move.pt', permission='loggedin')
@@ -113,7 +118,6 @@ def make_move(request):
             db_funcs.perform_move(the_game, column)
             return HTTPFound(location=request.route_url("connect_four.game", game_id=game_id))
         except Exception as e:
-            raise
             message = e.args[0]
     else:
         message = "It is not your turn"
