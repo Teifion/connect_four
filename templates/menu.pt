@@ -5,7 +5,7 @@
     
     <div metal:fill-slot="content">
         <div style="width: 600px; margin-bottom:40px;">
-            This game is still in beta and liable to have bugs in it. Games may be wiped as updates are written (hopefully they won't but you've been warned). If you discover a bug please email me (info at bottom of page).
+            This game is still in beta and liable to have bugs in it. Games will be wiped once I add in profiles (win ratios etc) but I wanted to get the core mechanics working first. If you discover a bug please email me (info at bottom of page).
         </div>
         
         <div style="width: 350px; float:right;" id="waiting_games">
