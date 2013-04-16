@@ -71,6 +71,37 @@ def _check_vertical_end(current_state):
             if reader is True:
                 return True
 
+def _check_lowleft_upright_diagonal(current_state):
+    for start_col in range(-height, width):
+        reader = []
+        for row in range(width):
+            col = start_col + row
+            if 0 <= col < width and 0 <= row < height:
+                reader = _update_reader(reader, current_state[get_place_position(row, col)])
+                # print(col, row, reader)
+            else:
+                reader = []
+                # print(col, row, [" "])
+            
+            if reader is True:
+                return True
+
+def _check_upleft_lowright_diagonal(current_state):
+    for start_col in range(-height, width):
+        reader = []
+        for r in range(width):
+            row = height - r
+            col = start_col + r
+            if 0 <= col < width and 0 <= row < height:
+                reader = _update_reader(reader, current_state[get_place_position(row, col)])
+                # print(col, row, reader)
+            else:
+                reader = []
+                # print(col, row, [" "])
+            
+            if reader is True:
+                return True
+
 def _check_draw(current_state):
     return " " not in current_state
 
@@ -79,6 +110,8 @@ def check_for_game_end(current_state):
     function_list = (
         _check_horrizontal_end,
         _check_vertical_end,
+        _check_lowleft_upright_diagonal,
+        _check_upleft_lowright_diagonal,
     )
     
     for f in function_list:

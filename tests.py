@@ -1,13 +1,14 @@
 import unittest
 from dashboard.games.connect_four.lib import (
     rules,
+    actions,
 )
 
 # Remember the board is stored upside down
 current_state = """
 12-1212
 12-2121
---21212
+--11212
 12-----
 12-2222
 12-1111
@@ -39,7 +40,7 @@ class RulesTester(unittest.TestCase):
         expected_results = (
             "11 111",
             "22 222",
-            "  2   ",
+            "  1   ",
             "121 21",
             "212 21",
             "121 21",
@@ -72,17 +73,58 @@ class RulesTester(unittest.TestCase):
         ---2111
         """.replace("\n", "").replace(" ", "").replace("-", " ")
         
+        # Remember the board is drawn upside down
+        tl_br_win = """
+        -------
+        -----1-
+        ----1--
+        ---1---
+        --1----
+        -------
+        """.replace("\n", "").replace(" ", "").replace("-", " ")
+        
+        bl_tr_win = """
+        -------
+        --1----
+        ---1---
+        ----1--
+        -----1-
+        -------
+        """.replace("\n", "").replace(" ", "").replace("-", " ")
+        
+        # These are ones that should have had a win when I played but didn't
+        other_tl_br_win = " 1112   212    12     2                   "
+        self.assertEqual(True, rules._check_upleft_lowright_diagonal(other_tl_br_win))
+        
         # Check we win only on the ones we want to win
         self.assertEqual(None, rules._check_horrizontal_end(empty_state))
         self.assertEqual(True, rules._check_horrizontal_end(horrizontal_win))
         self.assertEqual(None, rules._check_horrizontal_end(vertical_win))
+        self.assertEqual(None, rules._check_horrizontal_end(bl_tr_win))
+        self.assertEqual(None, rules._check_horrizontal_end(tl_br_win))
         
         self.assertEqual(None, rules._check_vertical_end(empty_state))
         self.assertEqual(None, rules._check_vertical_end(horrizontal_win))
         self.assertEqual(True, rules._check_vertical_end(vertical_win))
+        self.assertEqual(None, rules._check_vertical_end(bl_tr_win))
+        self.assertEqual(None, rules._check_vertical_end(tl_br_win))
+        
+        self.assertEqual(None, rules._check_lowleft_upright_diagonal(empty_state))
+        self.assertEqual(None, rules._check_lowleft_upright_diagonal(horrizontal_win))
+        self.assertEqual(None, rules._check_lowleft_upright_diagonal(vertical_win))
+        self.assertEqual(True, rules._check_lowleft_upright_diagonal(bl_tr_win))
+        self.assertEqual(None, rules._check_lowleft_upright_diagonal(tl_br_win))
+        
+        self.assertEqual(None, rules._check_upleft_lowright_diagonal(empty_state))
+        self.assertEqual(None, rules._check_upleft_lowright_diagonal(horrizontal_win))
+        self.assertEqual(None, rules._check_upleft_lowright_diagonal(vertical_win))
+        self.assertEqual(None, rules._check_upleft_lowright_diagonal(bl_tr_win))
+        self.assertEqual(True, rules._check_upleft_lowright_diagonal(tl_br_win))
         
         # Check overall function
         self.assertEqual(False, rules.check_for_game_end(empty_state))
         self.assertEqual(True, rules.check_for_game_end(current_state))
         self.assertEqual(True, rules.check_for_game_end(horrizontal_win))
         self.assertEqual(True, rules.check_for_game_end(vertical_win))
+        self.assertEqual(True, rules.check_for_game_end(bl_tr_win))
+        self.assertEqual(True, rules.check_for_game_end(tl_br_win))
