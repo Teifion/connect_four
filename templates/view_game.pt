@@ -78,7 +78,9 @@
             background-color: #CC2;
         }
     </style>
-    
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton" href="${request.route_url('connect_four.menu')}">Connect 4 menu</a>
+    </div>
     <div metal:fill-slot="content">
         <script type="text/javascript" charset="utf-8">
             $(function() {
@@ -123,16 +125,20 @@
                 });
             </script>
         </div>
-        ${the_game.winner}
         <div id="my_turn" style="display:none;">
             &nbsp;
         </div>
+        <div tal:condition="the_game.winner != None" style="margin-bottom:10px;">
+            The game is over, ${winner.name} won the game on turn ${the_game.turn-1}
+        </div>
+        
         <div class="player1_block" tal:condition="rules.get_player_game_number(the_game, the_user.id) == 1">
             You are the blue player
         </div>
         <div class="player2_block" tal:condition="rules.get_player_game_number(the_game, the_user.id) == 2">
             You are the yellow player
         </div>
+        
         <div id="the_game">
             <div class="square" tal:repeat="circle positions">
                 <div class="empty" tal:condition="the_game.current_state[circle] == ' '">
@@ -146,13 +152,13 @@
                 </div>
             </div>
         </div>
-        <form class="dropper" tal:repeat="col range(7)" action="${request.route_url('connect_four.make_move')}" method="post" tal:condition="your_turn">
+        <form class="dropper" tal:repeat="col range(7)" action="${request.route_url('connect_four.make_move')}" method="post" tal:condition="your_turn and the_game.winner is None">
             <input type="hidden" name="game_id" value="${the_game.id}" />
             <input type="hidden" name="column" value="${col}" />
             <input type="submit" value="X" class="inbutton" />
         </form>
         
-        <div tal:condition="not your_turn" style="text-align:center;padding:10px;width:680px;">
+        <div tal:condition="not your_turn and the_game.winner is None" style="text-align:center;padding:10px;width:680px;">
             It is not currently your turn. The page will automatically refresh when it is.
             
             <script type="text/javascript">
@@ -161,6 +167,10 @@
                     load_check_turn_html()
                 }, 1000*5, 12, 1000*30);
             </script>
+        </div>
+        
+        <div tal:condition="the_game.winner != None">
+            <a href="${request.route_url('connect_four.rematch', game_id=the_game.id)}" class="inbutton">Start rematch</a>
         </div>
     </div>
     

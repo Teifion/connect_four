@@ -23,5 +23,6 @@ def add_views(config):
     
     # Ajax views
     config.add_route('connect_four.check_turn', '/games/connect4/check_turn/{game_id}')
+    config.add_route('connect_four.rematch', '/games/connect4/rematch/{game_id}')
     
     return config

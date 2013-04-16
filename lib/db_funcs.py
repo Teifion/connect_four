@@ -16,6 +16,7 @@ from . import rules
 from . import actions
 
 def get_game_list(user_id):
+    "Games waiting for us to make our move"
     User = config['User']
     
     filters = (
@@ -27,6 +28,36 @@ def get_game_list(user_id):
     )
     
     return list(config['DBSession'].query(ConnectFourGame.id, User.name, ConnectFourGame.turn).filter(*filters))
+
+def get_waiting_game_list(user_id):
+    "Games waiting for our opponent to make a move"
+    User = config['User']
+    
+    filters = (
+        or_(
+            and_(ConnectFourGame.player1 == user_id, "mod(connect_four_games.turn, 2) = 1", User.id == ConnectFourGame.player2),
+            and_(ConnectFourGame.player2 == user_id, "mod(connect_four_games.turn, 2) = 0", User.id == ConnectFourGame.player1),
+        ),
+        ConnectFourGame.winner == None,
+    )
+    
+    return list(config['DBSession'].query(ConnectFourGame.id, User.name, ConnectFourGame.turn).filter(*filters))
+
+def get_recent_game_list(user_id, limit=5):
+    "The most recently completed games, we return the id of the winner as a 4th attribute"
+    User = config['User']
+    
+    filters = (
+        or_(
+            and_(ConnectFourGame.player1 == user_id, User.id == ConnectFourGame.player2),
+            and_(ConnectFourGame.player2 == user_id, User.id == ConnectFourGame.player1),
+        ),
+        ConnectFourGame.winner != None,
+    )
+    
+    return list(config['DBSession'].query(
+        ConnectFourGame.id, User.name, ConnectFourGame.turn, ConnectFourGame.winner
+    ).filter(*filters).limit(limit))
 
 def find_user(identifier):
     User = config['User']

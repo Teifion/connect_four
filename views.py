@@ -24,14 +24,18 @@ def menu(request):
     the_user = config['get_user_func'](request)
     layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
     
-    game_list = db_funcs.get_game_list(the_user.id)
+    game_list    = db_funcs.get_game_list(the_user.id)
+    waiting_list = db_funcs.get_waiting_game_list(the_user.id)
+    recent_list  = db_funcs.get_recent_game_list(the_user.id)
     
     return dict(
-        title      = "Connect Four",
-        layout     = layout,
-        the_user   = the_user,
+        title        = "Connect Four",
+        layout       = layout,
+        the_user     = the_user,
         
-        game_list  = game_list
+        game_list    = game_list,
+        waiting_list = waiting_list,
+        recent_list  = recent_list,
     )
 
 @view_config(route_name='connect_four.new_game', renderer='templates/new_game.pt', permission='loggedin')
@@ -71,6 +75,10 @@ def view_game(request):
     the_game = db_funcs.get_game(game_id)
     message  = ""
     
+    winner = None
+    if the_game.winner != None:
+        winner = db_funcs.find_user(the_game.winner)
+    
     return dict(
         title     = "Connect Four",
         layout    = layout,
@@ -78,6 +86,7 @@ def view_game(request):
         the_game  = the_game,
         your_turn = rules.current_player(the_game) == the_user.id,
         rules     = rules,
+        winner    = winner,
         message   = message,
         positions = rules.visual_positions(),
     )
@@ -117,6 +126,29 @@ def make_move(request):
         message      = message,
         flash_colour = flash_colour,
     )
+
+@view_config(route_name='connect_four.rematch', permission='loggedin')
+def rematch(request):
+    the_user = config['get_user_func'](request)
+    game_id  = int(request.matchdict['game_id'])
+    the_game = db_funcs.get_game(game_id)
+    
+    # Not a player? Send them back to the menu
+    if the_user.id != the_game.player1 and the_user.id != the_game.player2:
+        return HTTPFound(location=request.route_url("connect_four.menu"))
+    
+    # Not over yet? Send them back to the game in question.
+    if the_game.winner == None:
+        return HTTPFound(location=request.route_url("connect_four.game", game_id=game_id))
+    
+    if the_user.id == the_game.player1:
+        opponent = db_funcs.find_user(the_game.player2)
+    else:
+        opponent = db_funcs.find_user(the_game.player1)
+    
+    newgame_id = db_funcs.new_game(the_user, opponent)
+    return HTTPFound(location=request.route_url("connect_four.game", game_id=newgame_id))
+    
 
 @view_config(route_name='connect_four.check_turn', renderer='string', permission='loggedin')
 def check_turn(request):
