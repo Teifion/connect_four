@@ -176,7 +176,15 @@
         </div>
         
         <div tal:condition="the_game.winner != None">
-            <a href="${request.route_url('connect_four.rematch', game_id=the_game.id)}" class="inbutton">Start rematch</a>
+            <div tal:condition="the_game.rematch == None">
+                <a href="${request.route_url('connect_four.rematch', game_id=the_game.id)}" class="inbutton">Start rematch</a>
+            </div>
+            <div tal:condition="the_game.rematch != None">
+                <a href="${request.route_url('connect_four.game', game_id=the_game.rematch)}" class="inbutton">Goto rematch</a>
+            </div>
+        </div>
+        <div tal:condition="the_game.source != None">
+            <a href="${request.route_url('connect_four.game', game_id=the_game.source)}" class="inbutton">Goto previous game</a>
         </div>
     </div>
     

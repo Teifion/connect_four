@@ -35,6 +35,7 @@ class ConnectFourGame(Base):
     current_state = Column(String, nullable=False)
     
     rematch = Column(Integer, ForeignKey("connect_four_games.id"))
+    source  = Column(Integer, ForeignKey("connect_four_games.id"))
 
 class ConnectFourMove(Base):
     __tablename__ = 'connect_four_moves'

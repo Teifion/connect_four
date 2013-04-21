@@ -152,7 +152,8 @@ def rematch(request):
     else:
         opponent = db_funcs.find_user(the_game.player1)
     
-    newgame_id = db_funcs.new_game(the_user, opponent)
+    newgame_id = db_funcs.new_game(the_user, opponent, rematch=game_id)
+    the_game.rematch = newgame_id
     return HTTPFound(location=request.route_url("connect_four.game", game_id=newgame_id))
     
 

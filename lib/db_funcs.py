@@ -77,12 +77,13 @@ def find_user(identifier):
     else:
         raise KeyError("No handler for identifier type of '{}'".format(type(identifier)))
 
-def new_game(p1, p2):
+def new_game(p1, p2, rematch=None):
     game               = ConnectFourGame()
     game.player1       = p1.id
     game.player2       = p2.id
     game.started       = datetime.datetime.now()
     game.turn          = 0
+    game.source        = rematch
     game.current_state = str(rules.empty_board)
     
     config['DBSession'].add(game)
