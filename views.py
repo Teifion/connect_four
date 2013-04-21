@@ -44,6 +44,7 @@ def preferences(request):
     the_user = config['get_user_func'](request)
     profile = db_funcs.get_profile(the_user.id)
     layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
+    message = ""
     
     if "form.submitted" in request.params:
         preferred_colour = request.params['preferred_colour']
@@ -51,12 +52,15 @@ def preferences(request):
             profile.preferred_colour = True
         else:
             profile.preferred_colour = False
+        
+        message = "Changes saved"
     
     return dict(
         title    = "Connect Four preferences",
         layout   = layout,
         the_user = the_user,
         profile  = profile,
+        message  = message,
     )
 
 @view_config(route_name='connect_four.new_game', renderer='templates/new_game.pt', permission='loggedin')
