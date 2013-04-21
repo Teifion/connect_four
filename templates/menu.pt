@@ -3,7 +3,8 @@
         
     </style>
     <div metal:fill-slot="header_buttons" style="display:inline-block;">
-        <a class="inbutton" href="${request.route_url('connect_four.preferences')}">Connect 4 prefs</a>
+        <a class="inbutton" href="${request.route_url('connect_four.stats')}">Stats</a>
+        <a class="inbutton" href="${request.route_url('connect_four.preferences')}">Preferences</a>
     </div>
     <div metal:fill-slot="content">
         <div style="width: 600px; margin-bottom:40px;">

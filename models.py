@@ -17,11 +17,6 @@ class ConnectFourProfile(Base):
     user              = Column(Integer, ForeignKey("users.id"), nullable=False, index=True, primary_key=True)
     
     preferred_colour  = Column(Boolean, default=False)
-    
-    games_won         = Column(Integer)
-    games_lost        = Column(Integer)
-    games_drawn       = Column(Integer)
-    games_in_progress = Column(Integer)
 
 class ConnectFourGame(Base):
     __tablename__ = 'connect_four_games'

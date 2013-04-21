@@ -22,8 +22,11 @@ from .config import config
 @view_config(route_name='connect_four.menu', renderer='templates/menu.pt', permission='loggedin')
 def menu(request):
     the_user = config['get_user_func'](request)
-    db_funcs.get_profile(the_user.id)
     layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
+    
+    # We call but don't query this so that we can assign a profile
+    # if none exists
+    db_funcs.get_profile(the_user.id)
     
     game_list    = db_funcs.get_game_list(the_user.id)
     waiting_list = db_funcs.get_waiting_game_list(the_user.id)
@@ -37,6 +40,42 @@ def menu(request):
         game_list    = game_list,
         waiting_list = waiting_list,
         recent_list  = recent_list,
+    )
+
+@view_config(route_name='connect_four.stats', renderer='templates/stats.pt', permission='loggedin')
+def stats(request):
+    the_user = config['get_user_func'](request)
+    db_funcs.get_profile(the_user.id)
+    layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
+    
+    stats = db_funcs.get_stats(the_user.id)
+    
+    return dict(
+        title    = "Connect Four stats",
+        layout   = layout,
+        the_user = the_user,
+        
+        stats    = stats,
+    )
+
+@view_config(route_name='connect_four.head_to_head_stats', renderer='templates/head_to_head_stats.pt', permission='loggedin')
+def head_to_head_stats(request):
+    the_user = config['get_user_func'](request)
+    
+    if "opponent_name" in request.params:
+        opponent_name = request.params['opponent_name'].strip().upper()
+        opponent = db_funcs.find_user(opponent_name)
+    else:
+        opponent_id = int(request.params['opponent_id'])
+        opponent = db_funcs.find_user(opponent_id)
+    
+    stats = None
+        
+    if opponent is not None:
+        stats = db_funcs.get_head_to_head_stats(the_user.id)
+    
+    return dict(
+        stats    = stats,
     )
 
 @view_config(route_name='connect_four.preferences', renderer='templates/preferences.pt', permission='loggedin')

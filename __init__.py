@@ -12,6 +12,8 @@ def add_views(config):
     # Standard views
     config.add_route('connect_four.menu', '/games/connect4/menu')
     config.add_route('connect_four.preferences', '/games/connect4/preferences')
+    config.add_route('connect_four.stats', '/games/connect4/stats')
+    config.add_route('connect_four.head_to_head_stats', '/games/connect4/head_to_head_stats')
     
     config.add_route('connect_four.game', '/games/connect4/game/{game_id}')
     config.add_route('connect_four.replay', '/games/connect4/replay/{game_id}')

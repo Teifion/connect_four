@@ -123,3 +123,8 @@ def check_for_game_end(current_state):
         return None
     
     return False
+
+def win_ratio(wins, total_games, decimal_points=2):
+    if total_games == 0: return 0
+    if wins == 0: return 0
+    return round(100 * (wins / total_games), decimal_points)
