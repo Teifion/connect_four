@@ -138,22 +138,22 @@
             </span>
         </div>
         
-        <div class="player1_block" tal:condition="rules.get_player_game_number(the_game, the_user.id) == 1">
+        <div class="player1_block" tal:condition="profile.preferred_colour">
             You are the blue player, playing against ${opponent.name}
         </div>
-        <div class="player2_block" tal:condition="rules.get_player_game_number(the_game, the_user.id) == 2">
+        <div class="player2_block" tal:condition="not profile.preferred_colour">
             You are the yellow player, playing against ${opponent.name}
         </div>
         
         <div id="the_game">
             <div class="square" tal:repeat="circle positions">
-                <div class="empty" tal:condition="the_game.current_state[circle] == ' '">
+                <div class="empty" tal:condition="game_state[circle] == ' '">
                     &nbsp;
                 </div>
-                <div class="player1" tal:condition="the_game.current_state[circle] == '1'">
+                <div class="player1" tal:condition="game_state[circle] == '1'">
                     &nbsp;
                 </div>
-                <div class="player2" tal:condition="the_game.current_state[circle] == '2'">
+                <div class="player2" tal:condition="game_state[circle] == '2'">
                     &nbsp;
                 </div>
             </div>

@@ -2,7 +2,9 @@
     <style type="text/css" media="screen" metal:fill-slot="css">
         
     </style>
-    
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton" href="${request.route_url('connect_four.preferences')}">Connect 4 prefs</a>
+    </div>
     <div metal:fill-slot="content">
         <div style="width: 600px; margin-bottom:40px;">
             This game is still in beta and liable to have bugs in it. Games will be wiped once I add in profiles (win ratios etc) but I wanted to get the core mechanics working first. If you discover a bug please email me (info at bottom of page).

@@ -22,6 +22,7 @@ from .config import config
 @view_config(route_name='connect_four.menu', renderer='templates/menu.pt', permission='loggedin')
 def menu(request):
     the_user = config['get_user_func'](request)
+    db_funcs.get_profile(the_user.id)
     layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
     
     game_list    = db_funcs.get_game_list(the_user.id)
@@ -36,6 +37,26 @@ def menu(request):
         game_list    = game_list,
         waiting_list = waiting_list,
         recent_list  = recent_list,
+    )
+
+@view_config(route_name='connect_four.preferences', renderer='templates/preferences.pt', permission='loggedin')
+def preferences(request):
+    the_user = config['get_user_func'](request)
+    profile = db_funcs.get_profile(the_user.id)
+    layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
+    
+    if "form.submitted" in request.params:
+        preferred_colour = request.params['preferred_colour']
+        if preferred_colour == "true":
+            profile.preferred_colour = True
+        else:
+            profile.preferred_colour = False
+    
+    return dict(
+        title    = "Connect Four preferences",
+        layout   = layout,
+        the_user = the_user,
+        profile  = profile,
     )
 
 @view_config(route_name='connect_four.new_game', renderer='templates/new_game.pt', permission='loggedin')
@@ -69,6 +90,7 @@ def new_game(request):
 @view_config(route_name='connect_four.game', renderer='templates/view_game.pt', permission='loggedin')
 def view_game(request):
     the_user = config['get_user_func'](request)
+    profile = db_funcs.get_profile(the_user.id)
     layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
     
     game_id  = int(request.matchdict['game_id'])
@@ -77,25 +99,28 @@ def view_game(request):
     
     if the_game.player1 == the_user.id:
         opponent = db_funcs.find_user(the_game.player2)
+        game_state = actions.set_state_by_colour(the_game.current_state, profile.preferred_colour, player_is_player1=True)
     else:
         opponent = db_funcs.find_user(the_game.player1)
+        game_state = actions.set_state_by_colour(the_game.current_state, profile.preferred_colour, player_is_player1=False)
     
     winner = None
     if the_game.winner != None:
         winner = db_funcs.find_user(the_game.winner)
     
     return dict(
-        title     = "Connect Four",
-        layout    = layout,
-        the_user  = the_user,
-        the_game  = the_game,
-        your_turn = rules.current_player(the_game) == the_user.id,
-        rules     = rules,
-        winner    = winner,
-        message   = message,
-        positions = rules.visual_positions(),
+        title       = "Connect Four: {}".format(opponent.name),
+        layout      = layout,
+        the_user    = the_user,
+        the_game    = the_game,
+        your_turn   = rules.current_player(the_game) == the_user.id,
+        profile     = profile,
+        winner      = winner,
+        message     = message,
+        positions   = rules.visual_positions(),
         valid_moves = list(rules.valid_moves(the_game.current_state)),
-        opponent = opponent,
+        opponent    = opponent,
+        game_state  = game_state,
     )
 
 @view_config(route_name='connect_four.make_move', renderer='templates/make_move.pt', permission='loggedin')

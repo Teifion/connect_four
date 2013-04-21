@@ -1,0 +1,31 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        
+    </style>
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton" href="${request.route_url('connect_four.menu')}">Connect 4 menu</a>
+    </div>
+    <div metal:fill-slot="content">
+        <form action="${request.route_url('connect_four.preferences')}" method="post" accept-charset="utf-8">
+            
+            <table border="0" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td><label for="preferred_colour">Your colour:</label></td>
+                    <td style="background-color:#06A; width:50px; text-align:center;">
+                        <input type="radio" name="preferred_colour" id="preferred_colour_true" value="true" tal:attributes="checked profile.preferred_colour"/>
+                    </td>
+                    <td style="background-color:#CC2; width:50px; text-align:center;">
+                        <input type="radio" name="preferred_colour" id="preferred_colour_false" value="false" tal:attributes="checked not profile.preferred_colour"/>
+                    </td>
+                </tr>
+            </table>
+            
+            <input type="submit" value="Submit" name="form.submitted" class="inbutton" />
+        </form>
+        
+    </div>
+    
+    <div metal:fill-slot="footer">
+        Open source - <a href="http://github.com/teifion/connect_four">http://github.com/teifion/connect_four</a>
+    </div>
+</div>

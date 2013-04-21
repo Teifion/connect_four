@@ -14,7 +14,9 @@ from ...models import Base
 
 class ConnectFourProfile(Base):
     __tablename__ = 'connect_four_profiles'
-    id                = Column(Integer, ForeignKey("users.id"), nullable=False, index=True, primary_key=True)
+    user              = Column(Integer, ForeignKey("users.id"), nullable=False, index=True, primary_key=True)
+    
+    preferred_colour  = Column(Boolean, default=False)
     
     games_won         = Column(Integer)
     games_lost        = Column(Integer)

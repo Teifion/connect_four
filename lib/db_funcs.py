@@ -8,12 +8,28 @@ from ..config import config
 from ..models import (
     ConnectFourGame,
     ConnectFourMove,
+    ConnectFourProfile,
 )
 
 from sqlalchemy import or_, and_
 import datetime
 from . import rules
 from . import actions
+
+def get_profile(user_id):
+    the_profile = config['DBSession'].query(ConnectFourProfile).filter(ConnectFourProfile.user == user_id).first()
+    
+    if the_profile is None:
+        the_profile = add_empty_profile(user_id)
+    
+    return the_profile
+
+def add_empty_profile(user_id):
+    the_profile = ConnectFourProfile()
+    the_profile.user = user_id
+    
+    config['DBSession'].add(the_profile)
+    return the_profile
 
 def get_game_list(user_id):
     "Games waiting for us to make our move"
