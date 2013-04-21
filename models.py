@@ -33,6 +33,8 @@ class ConnectFourGame(Base):
     
     winner        = Column(Integer, ForeignKey("users.id"), nullable=True)
     current_state = Column(String, nullable=False)
+    
+    rematch = Column(Integer, ForeignKey("connect_four_games.id"))
 
 class ConnectFourMove(Base):
     __tablename__ = 'connect_four_moves'

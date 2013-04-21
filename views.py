@@ -75,13 +75,14 @@ def view_game(request):
     the_game = db_funcs.get_game(game_id)
     message  = ""
     
+    if the_game.player1 == the_user.id:
+        opponent = db_funcs.find_user(the_game.player2)
+    else:
+        opponent = db_funcs.find_user(the_game.player1)
+    
     winner = None
     if the_game.winner != None:
         winner = db_funcs.find_user(the_game.winner)
-    
-    print("\n\n")
-    print(the_game.winner)
-    print("\n\n")
     
     return dict(
         title     = "Connect Four",
@@ -94,6 +95,7 @@ def view_game(request):
         message   = message,
         positions = rules.visual_positions(),
         valid_moves = list(rules.valid_moves(the_game.current_state)),
+        opponent = opponent,
     )
 
 @view_config(route_name='connect_four.make_move', renderer='templates/make_move.pt', permission='loggedin')

@@ -139,10 +139,10 @@
         </div>
         
         <div class="player1_block" tal:condition="rules.get_player_game_number(the_game, the_user.id) == 1">
-            You are the blue player
+            You are the blue player, playing against ${opponent.name}
         </div>
         <div class="player2_block" tal:condition="rules.get_player_game_number(the_game, the_user.id) == 2">
-            You are the yellow player
+            You are the yellow player, playing against ${opponent.name}
         </div>
         
         <div id="the_game">
