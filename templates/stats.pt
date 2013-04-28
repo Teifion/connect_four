@@ -38,10 +38,10 @@
                 <td>${stats['games_drawn']}</td>
             </tr>
         </table>
+        
+        <br /><br /><br /><br />
+        Head to head stats coming soon!
     </div>
-    
-    <br /><br /><br /><br />
-    Head to head stats coming soon!
     
     <div metal:fill-slot="footer">
         Open source - <a href="http://github.com/teifion/connect_four">http://github.com/teifion/connect_four</a>
