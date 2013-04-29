@@ -1,3 +1,5 @@
+from . import views
+
 def includeme(config):
     """
     Pass this to your configurator object like so:
@@ -24,15 +26,15 @@ def includeme(config):
     config.add_route('connect_four.check_turn', '/connect4/check_turn/{game_id}')
     config.add_route('connect_four.rematch', '/connect4/rematch/{game_id}')
     
-    # Now add the views
-    config.add_view(route_name='connect_four.menu', renderer='templates/menu.pt', permission='loggedin')
-    config.add_view(route_name='connect_four.stats', renderer='templates/stats.pt', permission='loggedin')
-    config.add_view(route_name='connect_four.head_to_head_stats', renderer='templates/head_to_head_stats.pt', permission='loggedin')
-    config.add_view(route_name='connect_four.preferences', renderer='templates/preferences.pt', permission='loggedin')
-    config.add_view(route_name='connect_four.new_game', renderer='templates/new_game.pt', permission='loggedin')
-    config.add_view(route_name='connect_four.game', renderer='templates/view_game.pt', permission='loggedin')
-    config.add_view(route_name='connect_four.make_move', renderer='templates/make_move.pt', permission='loggedin')
-    config.add_view(route_name='connect_four.rematch', renderer='string', permission='loggedin')
-    config.add_view(route_name='connect_four.check_turn', renderer='string', permission='loggedin')
+    # Now link the views
+    config.add_view(views.menu, route_name='connect_four.menu', renderer='templates/menu.pt', permission='loggedin')
+    config.add_view(views.stats, route_name='connect_four.stats', renderer='templates/stats.pt', permission='loggedin')
+    config.add_view(views.head_to_head_stats, route_name='connect_four.head_to_head_stats', renderer='templates/head_to_head_stats.pt', permission='loggedin')
+    config.add_view(views.preferences, route_name='connect_four.preferences', renderer='templates/preferences.pt', permission='loggedin')
+    config.add_view(views.new_game, route_name='connect_four.new_game', renderer='templates/new_game.pt', permission='loggedin')
+    config.add_view(views.view_game, route_name='connect_four.game', renderer='templates/view_game.pt', permission='loggedin')
+    config.add_view(views.make_move, route_name='connect_four.make_move', renderer='templates/make_move.pt', permission='loggedin')
+    config.add_view(views.rematch, route_name='connect_four.rematch', renderer='string', permission='loggedin')
+    config.add_view(views.check_turn, route_name='connect_four.check_turn', renderer='string', permission='loggedin')
     
     return config

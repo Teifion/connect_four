@@ -35,7 +35,7 @@ def example_config_constructor(config):
     
     from .games import connect_four
     config = connect_four.add_views(config)
-    connect_four.config.config['layout'] = '../../templates/layouts/viewer.pt'
+    connect_four.config.config['layout'] = '../templates/layouts/viewer.pt'
     connect_four.config.config['DBSession'] = DBSession
     connect_four.config.config['User'] = models.User
     connect_four.config.config['viewtest_class'] = test_lib.DBTestClass

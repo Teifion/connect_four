@@ -22,7 +22,7 @@ from .config import config
 # @view_config(route_name='connect_four.menu', renderer='templates/menu.pt', permission='loggedin')
 def menu(request):
     the_user = config['get_user_func'](request)
-    layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
+    layout = get_renderer(config['layout']).implementation()
     
     # We call but don't query this so that we can assign a profile
     # if none exists
@@ -46,7 +46,7 @@ def menu(request):
 def stats(request):
     the_user = config['get_user_func'](request)
     db_funcs.get_profile(the_user.id)
-    layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
+    layout = get_renderer(config['layout']).implementation()
     
     stats = db_funcs.get_stats(the_user.id)
     
@@ -82,7 +82,7 @@ def head_to_head_stats(request):
 def preferences(request):
     the_user = config['get_user_func'](request)
     profile = db_funcs.get_profile(the_user.id)
-    layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
+    layout = get_renderer(config['layout']).implementation()
     message = ""
     
     if "form.submitted" in request.params:
@@ -105,7 +105,7 @@ def preferences(request):
 # @view_config(route_name='connect_four.new_game', renderer='templates/new_game.pt', permission='loggedin')
 def new_game(request):
     the_user = config['get_user_func'](request)
-    layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
+    layout = get_renderer(config['layout']).implementation()
     
     message = ""
     flash_colour = "A00"
@@ -134,7 +134,7 @@ def new_game(request):
 def view_game(request):
     the_user = config['get_user_func'](request)
     profile = db_funcs.get_profile(the_user.id)
-    layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
+    layout = get_renderer(config['layout']).implementation()
     
     game_id  = int(request.matchdict['game_id'])
     the_game = db_funcs.get_game(game_id)
@@ -169,7 +169,7 @@ def view_game(request):
 # @view_config(route_name='connect_four.make_move', renderer='templates/make_move.pt', permission='loggedin')
 def make_move(request):
     the_user = config['get_user_func'](request)
-    layout = get_renderer('../../templates/layouts/viewer.pt').implementation()
+    layout = get_renderer(config['layout']).implementation()
     
     message = ""
     flash_colour = "A00"
