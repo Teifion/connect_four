@@ -39,8 +39,38 @@
             </tr>
         </table>
         
+        <!-- Head to Head -->
         <br /><br /><br /><br />
-        Head to head stats coming soon!
+        <script type="text/javascript" charset="utf-8" tal:condition="stats != None">
+            $(document).ready(function() {
+                $('#opponent').focus();
+            });
+            
+            function get_head_to_head ()
+            {
+                // Load the drilldown
+                $('#head_to_head_results').load(
+                    '${request.route_url('connect_four.head_to_head_stats')}',
+                    {
+                        'player':${the_user.id},
+                        'opponent_name':$('#opponent').val()
+                    });
+                $('#opponent').focus();
+                $('#opponent').select();
+            }
+        </script>
+        <div class="">
+            <form method="post" accept-charset="utf-8" onsubmit="get_head_to_head(); return false;">
+                Enter opponent name for head to head stats:<br />
+                <input type="text" name="opponent" id="opponent" value="" style="display:inline-block;"/>
+                
+                <input type="submit" value="Load" name="form.submitted" class="inbutton" />
+            </form>
+            
+            <div id="head_to_head_results">
+                &nbsp;
+            </div>
+        </div>
     </div>
     
     <div metal:fill-slot="footer">

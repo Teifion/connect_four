@@ -154,49 +154,91 @@ def perform_move(the_game, column):
     
     config['DBSession'].add(the_game)
 
-def completed_games(user_id):
-    filters = (
-        or_(ConnectFourGame.player1 == user_id, ConnectFourGame.player2 == user_id),
-        ConnectFourGame.winner != None,
-    )
+def completed_games(user_id, opponent_id=None):
+    if opponent_id != None:
+        filters = (
+            or_(
+                and_(ConnectFourGame.player1 == user_id, ConnectFourGame.player2 == opponent_id),
+                and_(ConnectFourGame.player2 == user_id, ConnectFourGame.player1 == opponent_id),
+            ),
+            ConnectFourGame.winner != None,
+        )
+    else:
+        filters = (
+            or_(ConnectFourGame.player1 == user_id, ConnectFourGame.player2 == user_id),
+            ConnectFourGame.winner != None,
+        )
     return config['DBSession'].query(func.count(ConnectFourGame.id)).filter(*filters).first()[0]
 
-def games_in_progress(user_id):
-    filters = (
-        or_(ConnectFourGame.player1 == user_id, ConnectFourGame.player2 == user_id),
-        ConnectFourGame.winner == None,
-    )
+def games_in_progress(user_id, opponent_id=None):
+    if opponent_id != None:
+        filters = (
+            or_(
+                and_(ConnectFourGame.player1 == user_id, ConnectFourGame.player2 == opponent_id),
+                and_(ConnectFourGame.player2 == user_id, ConnectFourGame.player1 == opponent_id),
+            ),
+            ConnectFourGame.winner == None,
+        )
+    else:
+        filters = (
+            or_(ConnectFourGame.player1 == user_id, ConnectFourGame.player2 == user_id),
+            ConnectFourGame.winner == None,
+        )
     return config['DBSession'].query(func.count(ConnectFourGame.id)).filter(*filters).first()[0]
     
-def games_won(user_id):
-    filters = (
+def games_won(user_id, opponent_id=None):
+    filters = [
         ConnectFourGame.winner == user_id,
-    )
+    ]
+    if opponent_id != None:
+        filters.append(or_(
+            ConnectFourGame.player1 == opponent_id,
+            ConnectFourGame.player2 == opponent_id
+        ))
+    
     return config['DBSession'].query(func.count(ConnectFourGame.id)).filter(*filters).first()[0]
 
-def games_lost(user_id):
-    filters = (
-        or_(ConnectFourGame.player1 == user_id, ConnectFourGame.player2 == user_id),
-        ConnectFourGame.winner != user_id,
-        ConnectFourGame.winner != None,
-    )
+def games_lost(user_id, opponent_id=None):
+    if opponent_id != None:
+        filters = (
+            ConnectFourGame.winner == opponent_id,
+            or_(
+                ConnectFourGame.player1 == user_id,
+                ConnectFourGame.player2 == user_id
+            ))
+    else:
+        filters = (
+            or_(ConnectFourGame.player1 == user_id, ConnectFourGame.player2 == user_id),
+            ConnectFourGame.winner != user_id,
+            ConnectFourGame.winner != None,
+        )
     return config['DBSession'].query(func.count(ConnectFourGame.id)).filter(*filters).first()[0]
 
-def games_drawn(user_id):
-    filters = (
-        or_(ConnectFourGame.player1 == user_id, ConnectFourGame.player2 == user_id),
-        ConnectFourGame.winner == -1,
-    )
-    return config['DBSession'].query(func.count(ConnectFourGame.id)).filter(*filters).first()[0]
-
-def get_stats(user_id):
-    stats = dict(
-        completed_games   = completed_games(user_id),
-        games_in_progress = games_in_progress(user_id),
+def games_drawn(user_id, opponent_id=None):
+    if opponent_id != None:
+        filters = (
+            or_(
+                and_(ConnectFourGame.player1 == user_id, ConnectFourGame.player2 == opponent_id),
+                and_(ConnectFourGame.player2 == user_id, ConnectFourGame.player1 == opponent_id),
+            ),
+            ConnectFourGame.winner == -1,
+        )
+    else:
         
-        games_won   = games_won(user_id),
-        games_lost  = games_lost(user_id),
-        games_drawn = games_drawn(user_id),
+        filters = (
+            or_(ConnectFourGame.player1 == user_id, ConnectFourGame.player2 == user_id),
+            ConnectFourGame.winner == -1,
+        )
+    return config['DBSession'].query(func.count(ConnectFourGame.id)).filter(*filters).first()[0]
+
+def get_stats(user_id, opponent_id=None):
+    stats = dict(
+        completed_games   = completed_games(user_id, opponent_id),
+        games_in_progress = games_in_progress(user_id, opponent_id),
+        
+        games_won   = games_won(user_id, opponent_id),
+        games_lost  = games_lost(user_id, opponent_id),
+        games_drawn = games_drawn(user_id, opponent_id),
     )
     
     stats['win_ratio'] = rules.win_ratio(stats['games_won'], stats['completed_games'])

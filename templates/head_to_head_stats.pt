@@ -1,1 +1,38 @@
-XYZ
+<div tal:condition="stats == None and message != ''">
+    ${message}
+</div>
+
+<div tal:condition="stats != None">
+    <br /><br />
+    <div style="font-size:1.2em;margin-bottom:20px;">Win ratio against ${opponent.name}: ${stats['win_ratio']}%</div>
+    
+    <table border="0" cellspacing="0" cellpadding="5">
+        <tr>
+            <td><strong>Games played:</strong></td>
+            <td>${stats['completed_games'] + stats['games_in_progress']}</td>
+            
+            <td width="75">&nbsp;</td>
+            
+            <td><strong>Games won:</strong></td>
+            <td>${stats['games_won']}</td>
+        </tr>
+        <tr>
+            <td><strong>Completed games:</strong></td>
+            <td>${stats['completed_games']}</td>
+            
+            <td width="75">&nbsp;</td>
+            
+            <td><strong>Games lost:</strong></td>
+            <td>${stats['games_lost']}</td>
+        </tr>
+        <tr>
+            <td><strong>Games in progress:</strong></td>
+            <td>${stats['games_in_progress']}</td>
+            
+            <td width="75">&nbsp;</td>
+            
+            <td><strong>Games drawn:</strong></td>
+            <td>${stats['games_drawn']}</td>
+        </tr>
+    </table>
+</div>
