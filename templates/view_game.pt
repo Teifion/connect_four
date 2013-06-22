@@ -32,7 +32,8 @@
             width: 100px;
             height: 100px;
             float: left;
-            bbackground-color: #FAA;
+            display: block;
+            text-decoration: none;
         }
         
         .square .player1, .square .player2
@@ -146,7 +147,7 @@
         </div>
         
         <div id="the_game">
-            <div class="square" tal:repeat="circle positions">
+            <a class="square" tal:repeat="(c, circle) enumerate(positions)" href="${request.route_url('connect_four.make_move')}?game_id=${the_game.id}&amp;column=${c%7}">
                 <div class="empty" tal:condition="game_state[circle] == ' '">
                     &nbsp;
                 </div>
@@ -156,7 +157,7 @@
                 <div class="player2" tal:condition="game_state[circle] == '2'">
                     &nbsp;
                 </div>
-            </div>
+            </a>
         </div>
         <form class="dropper" tal:repeat="col range(7)" action="${request.route_url('connect_four.make_move')}" method="post" tal:condition="your_turn and the_game.winner is None">
             <input type="hidden" name="game_id" value="${the_game.id}" />

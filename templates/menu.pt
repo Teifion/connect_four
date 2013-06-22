@@ -7,10 +7,6 @@
         <a class="inbutton" href="${request.route_url('connect_four.preferences')}">Preferences</a>
     </div>
     <div metal:fill-slot="content">
-        <div style="width: 600px; margin-bottom:40px;">
-            This game is still in beta and liable to have bugs in it. Games will be wiped once I add in profiles (win ratios etc) but I wanted to get the core mechanics working first. If you discover a bug please email me (info at bottom of page).
-        </div>
-        
         <div style="width: 350px; float:right;" id="waiting_games">
             <div tal:condition="len(waiting_list) != 0">
                 <strong>Games awaiting your opponent's move:</strong><br />
