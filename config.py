@@ -21,7 +21,7 @@ config = {
     "layout": "../templates/default_layout.pt",
     "DBSession": None,
     "User": None,
-    "use_achievements": True,
+    "use_achievements": False,
     
     "viewtest_class": None,
     "viewtest_function": "",
