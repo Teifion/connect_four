@@ -9,22 +9,22 @@ def includeme(config):
     """
     
     # Standard views
-    config.add_route('connect_four.menu', '/connect4/menu')
-    config.add_route('connect_four.preferences', '/connect4/preferences')
-    config.add_route('connect_four.stats', '/connect4/stats')
-    config.add_route('connect_four.head_to_head_stats', '/connect4/head_to_head_stats')
+    config.add_route('connect_four.menu', '/menu')
+    config.add_route('connect_four.preferences', '/preferences')
+    config.add_route('connect_four.stats', '/stats')
+    config.add_route('connect_four.head_to_head_stats', '/head_to_head_stats')
     
-    config.add_route('connect_four.game', '/connect4/game/{game_id}')
-    config.add_route('connect_four.replay', '/connect4/replay/{game_id}')
-    config.add_route('connect_four.new_game', '/connect4/new_game')
+    config.add_route('connect_four.game', '/game/{game_id}')
+    config.add_route('connect_four.replay', '/replay/{game_id}')
+    config.add_route('connect_four.new_game', '/new_game')
     
     # Form submitting views
-    config.add_route('connect_four.make_move', '/connect4/make_move')
-    config.add_route('connect_four.forfeit', '/connect4/forfeit')
+    config.add_route('connect_four.make_move', '/make_move')
+    config.add_route('connect_four.forfeit', '/forfeit')
     
     # Ajax views
-    config.add_route('connect_four.check_turn', '/connect4/check_turn/{game_id}')
-    config.add_route('connect_four.rematch', '/connect4/rematch/{game_id}')
+    config.add_route('connect_four.check_turn', '/check_turn/{game_id}')
+    config.add_route('connect_four.rematch', '/rematch/{game_id}')
     
     # Now link the views
     config.add_view(views.menu, route_name='connect_four.menu', renderer='templates/menu.pt', permission='loggedin')
