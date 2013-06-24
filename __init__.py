@@ -5,7 +5,7 @@ def includeme(config):
     Pass this to your configurator object like so:
     
     from . import connect_four
-    config.include(connect_four)
+    config.include(connect_four, route_prefix="games/connect4")
     """
     
     # Standard views

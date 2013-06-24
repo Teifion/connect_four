@@ -34,7 +34,7 @@ def example_config_constructor(config):
     """This is a copy of how I'm setting up my Checkers configuration"""
     
     from .games import connect_four
-    config = connect_four.add_views(config)
+    config.include(connect_four, route_prefix="games/connect4")
     connect_four.config.config['layout'] = '../templates/layouts/viewer.pt'
     connect_four.config.config['DBSession'] = DBSession
     connect_four.config.config['User'] = models.User
