@@ -1,5 +1,6 @@
 import transaction
 import datetime
+from datetime import timedelta
 
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
@@ -16,6 +17,19 @@ from .models import (
     ConnectFourGame,
     ConnectFourMove,
 )
+
+try:
+    try:
+        from ...communique import send as com_send
+    except ImportError:
+        try:
+            from ..communique import send as com_send
+        except ImportError:
+            raise
+except Exception as e:
+    raise
+    def com_send(*args, **kwargs):
+        pass
 
 from .config import config
 
@@ -126,6 +140,7 @@ def new_game(request):
             
         else:
             game_id = db_funcs.new_game(the_user, opponent)
+            com_send(opponent.id, "connect_four.new_game", "{} has started a game against you".format(the_user.name), str(game_id), timedelta(hours=24))
             return HTTPFound(location=request.route_url("connect_four.game", game_id=game_id))
     
     return dict(
@@ -192,6 +207,8 @@ def make_move(request):
                 raise Exception("Invalid move")
             
             db_funcs.perform_move(the_game, column)
+            com_send(rules.current_player(the_game), "connect_four.new_move", "{} has made a move".format(the_user.name), str(game_id), timedelta(hours=24))
+            
             return HTTPFound(location=request.route_url("connect_four.game", game_id=game_id))
         except Exception as e:
             message = e.args[0]
@@ -228,6 +245,8 @@ def rematch(request):
     
     newgame_id = db_funcs.new_game(the_user, opponent, rematch=game_id)
     the_game.rematch = newgame_id
+    
+    com_send(newgame_id, "connect_four.new_game", "{} has started a game against you".format(the_user.name), str(newgame_id), timedelta(hours=24))
     return HTTPFound(location=request.route_url("connect_four.game", game_id=newgame_id))
     
 

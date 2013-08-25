@@ -139,6 +139,10 @@
             </span>
         </div>
         
+        <span tal:condition="your_turn" style="font-weight:bold;">It is your turn</span>
+        <span tal:condition="not your_turn">You are waiting for your opponent to make their move.</span>
+        <br /><br />
+        
         <div class="player1_block" tal:condition="profile.preferred_colour">
             You are the blue player, playing against ${opponent.name}
         </div>
@@ -165,7 +169,7 @@
             <input type="submit" value="X" class="inbutton" tal:condition="col in valid_moves"/>
         </form>
         
-        <div tal:condition="not your_turn and the_game.winner is None" style="text-align:center;padding:10px;width:680px;">
+        <div tal:condition="not your_turn and the_game.winner is None and False" style="text-align:center;padding:10px;width:680px;">
             It is not currently your turn. The page will automatically refresh when it is.
             
             <script type="text/javascript">
