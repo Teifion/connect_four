@@ -2,7 +2,6 @@ import transaction
 import datetime
 from datetime import timedelta
 
-from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 
 from pyramid.renderers import get_renderer
@@ -33,7 +32,6 @@ except Exception as e:
 
 from .config import config
 
-# @view_config(route_name='connect_four.menu', renderer='templates/menu.pt', permission='loggedin')
 def menu(request):
     the_user = config['get_user_func'](request)
     layout = get_renderer(config['layout']).implementation()
@@ -56,7 +54,6 @@ def menu(request):
         recent_list  = recent_list,
     )
 
-# @view_config(route_name='connect_four.stats', renderer='templates/stats.pt', permission='loggedin')
 def stats(request):
     the_user = config['get_user_func'](request)
     db_funcs.get_profile(the_user.id)
@@ -72,7 +69,6 @@ def stats(request):
         stats    = stats,
     )
 
-# @view_config(route_name='connect_four.head_to_head_stats', renderer='templates/head_to_head_stats.pt', permission='loggedin')
 def head_to_head_stats(request):
     the_user = config['get_user_func'](request)
     message  = ""
@@ -98,7 +94,6 @@ def head_to_head_stats(request):
         opponent = opponent,
     )
 
-# @view_config(route_name='connect_four.preferences', renderer='templates/preferences.pt', permission='loggedin')
 def preferences(request):
     the_user = config['get_user_func'](request)
     profile = db_funcs.get_profile(the_user.id)
@@ -122,7 +117,6 @@ def preferences(request):
         message  = message,
     )
 
-# @view_config(route_name='connect_four.new_game', renderer='templates/new_game.pt', permission='loggedin')
 def new_game(request):
     the_user = config['get_user_func'](request)
     layout = get_renderer(config['layout']).implementation()
@@ -151,7 +145,6 @@ def new_game(request):
         flash_colour = flash_colour,
     )
 
-# @view_config(route_name='connect_four.game', renderer='templates/view_game.pt', permission='loggedin')
 def view_game(request):
     the_user = config['get_user_func'](request)
     profile = db_funcs.get_profile(the_user.id)
@@ -187,7 +180,6 @@ def view_game(request):
         game_state  = game_state,
     )
 
-# @view_config(route_name='connect_four.make_move', renderer='templates/make_move.pt', permission='loggedin')
 def make_move(request):
     the_user = config['get_user_func'](request)
     layout = get_renderer(config['layout']).implementation()
@@ -201,7 +193,10 @@ def make_move(request):
     the_game = db_funcs.get_game(game_id)
     current_player = rules.current_player(the_game)
     
-    if current_player == the_user.id:
+    if the_game.winner not in (None, -1):
+        message = "The game is over"
+    
+    elif current_player == the_user.id:
         try:
             if not rules.is_move_valid(the_game.current_state, column):
                 raise Exception("Invalid move")
@@ -224,7 +219,6 @@ def make_move(request):
         flash_colour = flash_colour,
     )
 
-# @view_config(route_name='connect_four.rematch', permission='loggedin')
 def rematch(request):
     the_user = config['get_user_func'](request)
     game_id  = int(request.matchdict['game_id'])
@@ -250,7 +244,6 @@ def rematch(request):
     return HTTPFound(location=request.route_url("connect_four.game", game_id=newgame_id))
     
 
-# @view_config(route_name='connect_four.check_turn', renderer='string', permission='loggedin')
 def check_turn(request):
     request.do_not_log = True
     

@@ -23,9 +23,6 @@ config = {
     "User": None,
     "use_achievements": False,
     
-    "viewtest_class": None,
-    "viewtest_function": "",
-    
     "get_user_func": lambda r: KeyError("No function exists to get the user"),
     "get_user": AUser,
 }
@@ -38,8 +35,6 @@ def example_config_constructor(config):
     connect_four.config.config['layout'] = '../templates/layouts/viewer.pt'
     connect_four.config.config['DBSession'] = DBSession
     connect_four.config.config['User'] = models.User
-    connect_four.config.config['viewtest_class'] = test_lib.DBTestClass
-    connect_four.config.config['viewtest_function'] = "plugin_path_test"
     
     connect_four.config.config['get_user_func']      = lambda r: r.user
     connect_four.config.config['user.id_property']   = "id"

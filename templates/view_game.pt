@@ -139,8 +139,10 @@
             </span>
         </div>
         
-        <span tal:condition="your_turn" style="font-weight:bold;">It is your turn</span>
-        <span tal:condition="not your_turn">You are waiting for your opponent to make their move.</span>
+        <div tal:condition="the_game.winner in (None, -1)" style="margin-bottom:10px;">
+            <span tal:condition="your_turn" style="font-weight:bold;">It is your turn</span>
+            <span tal:condition="not your_turn">You are waiting for your opponent to make their move.</span>
+        </div>
         <br /><br />
         
         <div class="player1_block" tal:condition="profile.preferred_colour">
