@@ -1,3 +1,17 @@
+def connect4_nimblescan():
+    try:
+        from ...nimblescan import api
+    except ImportError:
+        try:
+            from ..nimblescan import api
+        except ImportError:
+            return
+    
+    api.register('connect_four.menu', "Connect 4 - Menu", ['games'], (lambda r: True), api.make_forwarder("connect_four.menu"))
+    api.register('connect_four.new_game', "Connect 4 - New game", ['games'], (lambda r: True), api.make_form_forwarder("connect_four.new_game", []), '<label for="ns_opponent">Opponent:</label> <input type="text" name="opponent_name" id="ns_opponent" value="" style="display:inline-block;"/>')
+    api.register('connect_four.stats', "Connect 4 - Stats", ['games'], (lambda r: True), api.make_forwarder("connect_four.stats"))
+    api.register('connect_four.preferences', "Connect 4 - Preferences", ['games'], (lambda r: True), api.make_forwarder("connect_four.preferences"))
+
 def connect4_notifications():
     try:
         from ...communique import register, send
@@ -18,6 +32,7 @@ def includeme(config):
     from . import views
     
     connect4_notifications()
+    connect4_nimblescan()
     
     """
     Pass this to your configurator object like so:
