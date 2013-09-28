@@ -23,7 +23,6 @@ def connect4_notifications():
     
     from .lib.notifications import forward_to_game, forward_to_profile
     
-    register('connect_four.new_game', 'New game', 'http://localhost:6543/static/images/communique/connect4.png', forward_to_game)
     register('connect_four.new_move', 'New move', 'http://localhost:6543/static/images/communique/connect4.png', forward_to_game)
     register('connect_four.end_game', 'Game over', 'http://localhost:6543/static/images/communique/connect4.png', forward_to_game)
     register('connect_four.win_game', 'Victory!', 'http://localhost:6543/static/images/communique/connect4.png', forward_to_game)
