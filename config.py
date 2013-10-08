@@ -25,17 +25,22 @@ config = {
     
     "get_user_func": lambda r: KeyError("No function exists to get the user"),
     "get_user": AUser,
+    
+    # I use this at work so it's an opportunity to check that the user's not been blocked
+    "check_blocked": lambda r: None,
 }
 
-def example_config_constructor(config):
-    """This is a copy of how I'm setting up my Checkers configuration"""
-    
-    from .games import connect_four
-    config.include(connect_four, route_prefix="games/connect4")
-    connect_four.config.config['layout'] = '../templates/layouts/viewer.pt'
-    connect_four.config.config['DBSession'] = DBSession
-    connect_four.config.config['User'] = models.User
-    
-    connect_four.config.config['get_user_func']      = lambda r: r.user
-    connect_four.config.config['user.id_property']   = "id"
-    connect_four.config.config['user.name_property'] = "name"
+# This is a copy of how I'm setting up my Connect Four configuration  
+# from .games import connect_four
+# config.include(connect_four, route_prefix="games/connect4")
+# connect_four.config.config['layout'] = '../templates/layouts/viewer.pt'
+# connect_four.config.config['DBSession'] = DBSession
+# connect_four.config.config['User'] = models.User
+# 
+# connect_four.config.config['get_user_func']      = lambda r: r.user
+# connect_four.config.config['user.id_property']   = "id"
+# connect_four.config.config['user.name_property'] = "name"
+# 
+# def _game_check(request):
+#     if request.user.blocked: raise HTTPFound(location="/")
+# connect_four.config.config['check_blocked'] = _game_check
