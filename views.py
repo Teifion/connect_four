@@ -104,7 +104,7 @@ def preferences(request):
     layout = get_renderer(config['layout']).implementation()
     message = ""
     
-    if "form.submitted" in request.params:
+    if "preferred_colour" in request.params:
         preferred_colour = request.params['preferred_colour']
         if preferred_colour == "true":
             profile.preferred_colour = True
@@ -129,7 +129,7 @@ def new_game(request):
     message = ""
     flash_colour = "A00"
     
-    if "form.submitted" in request.params:
+    if "opponent_name" in request.params:
         opponent_name = request.params['opponent_name'].strip().upper()
         opponent = db_funcs.find_user(opponent_name)
         
