@@ -3,6 +3,7 @@ These functions handle talking to the database and should be considered
 impure.
 """
 
+from random import random
 from ..config import config
 
 from ..models import (
@@ -102,6 +103,10 @@ def new_game(p1, p2, rematch=None):
     game.turn          = 0
     game.source        = rematch
     game.current_state = str(rules.empty_board)
+    
+    # 50% chance for either player to be player 1
+    if random() > 0.5:
+        game.player1, game.player2 = game.player2, game.player1
     
     config['DBSession'].add(game)
     

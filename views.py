@@ -139,7 +139,7 @@ def new_game(request):
             
         else:
             game_id = db_funcs.new_game(the_user, opponent)
-            # com_send(opponent.id, "connect_four.new_game", "{} has started a game against you".format(the_user.name), str(game_id), timedelta(hours=24))
+            com_send(opponent.id, "connect_four.new_game", "{} has started a game against you".format(the_user.name), str(game_id), timedelta(hours=24))
             return HTTPFound(location=request.route_url("connect_four.game", game_id=game_id))
     
     return dict(
